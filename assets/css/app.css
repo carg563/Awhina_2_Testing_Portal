@@ -1,0 +1,1041 @@
+/* 
+ * Title: app.css
+ * Purpose: Defines the custom styling for the Awhina Administration application
+   as well as ALL Awhina Portal Instances.
+ * Author: Dion Fabbro - dion.fabbro@nema.govt.nz, dionfabbro@gmail.com
+ * Version: 0.91
+*/
+
+/* !!!!!!!!!!!!!!!!!!! Values that may need to be changed in the future !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
+
+/* These categories define the colours used to display the cluster and point icons
+  (as well as the icons in the table view) in the portal instances. If a new welfare status
+  is created, it will need to be added to the list here. If the new status has spaces in the name
+  you must update the portal.js file to ensure that the spaces are converted to underscore.
+  Please search "Acknowledged_by_Agency" in the portal.js file to see the relevant code to update.*/
+.New {
+  fill: #fb49fb;
+  stroke: #cc00cc;
+  background: #fb49fb;
+}
+.Acknowledged_by_Agency {
+  fill: #FA0;
+  stroke: #ff8800;
+  background: #FA0;
+}
+.Referred_Within_CDC {
+  fill: #FF3;
+  stroke: #cab601;
+  background: #FF3;
+}
+.Actioned {
+  fill: #BFB;
+  stroke: #01dd01;
+  background: #BFB;
+}
+.Withdrawn {
+  fill: #9DF;
+  stroke: #00aaff;
+  background: #9DF;
+}
+
+/* CSS for the warning states of a referral need (overdue and due tomorrow)
+   If you need to chnage the striped rows of the records in the table view this is where to do it. 
+   If other options are added in (requires a lot of work in the JS file) these will need to be updated.
+*/
+.overdue, .overdue-missingperson, .overdue-householdgoods, .overdue-shelteraccommodation, .overdue-animalwelfare, .overdue-healthdisability, .overdue-financialassistance, .overdue-psychosocialsupport {
+  color: #000000;
+  text-shadow: 1px 1px #ffccc8 !important;
+  background: repeating-linear-gradient(
+              45deg,
+              #f9d2cf,
+              #f9d2cf 10px,
+              #ffccc8 10px,
+              #ffccc8 20px
+              ) !important;
+}
+.overdue:hover, .overdue-missingperson:hover, .overdue-shelteraccommodation:hover, .overdue-householdgoods:hover, .overdue-:hover, .overdue-healthdisability:hover, .overdue-financialassistance:hover, .overdue-psychosocialsupport:hover {
+  background: repeating-linear-gradient(
+    45deg,
+    #ffb4ae,
+    #ffb4ae 10px,
+    #f9d2cf 10px,
+    #f9d2cf 20px
+    ) !important;
+}
+.due-tomorrow, .due-tomorrow-missingperson, .due-tomorrow-shelteraccommodation, .due-tomorrow-householdgoods, .due-tomorrow-animalwelfare, .due-tomorrow-healthdisability, .due-tomorrow-financialassistance, .due-tomorrow-psychosocialsupport {
+  color: #000000;
+  text-shadow: 1px 1px rgba(255, 235, 176, 0.420);
+  background: repeating-linear-gradient(
+              45deg,
+              #ffedb8,
+              #ffedb8 10px,
+              #fff3d0 10px,
+              #fff3d0 20px
+              );
+}
+.due-tomorrow:hover, .due-tomorrow-missingperson:hover , .due-tomorrow-shelteraccommodation:hover , .due-tomorrow-householdgoods:hover , .due-tomorrow-animalwelfare:hover , .due-tomorrow-healthdisability:hover , .due-tomorrow-financialassistance:hover , .due-tomorrow-psychosocialsupport:hover {
+  background: repeating-linear-gradient(
+    45deg,
+    #ffd451,
+    #ffd451 10px,
+    #ffe79e 10px,
+    #ffe79e 20px
+    ) !important;
+}
+
+/* HTML Document -------------------------------------------------------------------------------- 
+   Main body and containers */
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+#map-container {
+  box-shadow: 0px 0px 8px 0px #696868;
+  height: 40%;
+  padding: 0;
+  resize: vertical;
+  overflow:auto;
+  z-index: 30;
+  display: none;
+}
+#table-container {
+  height: 55%;
+  padding-top: 0px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  position: relative;
+}
+
+#table-admin-container {
+  display: block;
+  height: 100%;
+  overflow-y : scroll;
+  width: 100%;
+  padding-top: 0px;
+  padding-bottom: 100px;
+  padding-left: 5px;
+  padding-right: 5px;
+  position: relative;
+  margin: 0 auto;
+  border-top: 1px solid lightgrey;
+}
+
+#form-container {
+  width: 500px;
+  margin: 0 auto;
+}
+
+/* Table CSS ------------------------------------------------------------------------------------*/
+.fixed-table-container {
+  line-height: 1;
+}
+.fixed-table-border {
+  height: 0px;
+}
+#main-table {
+  width: 99.3%;
+}
+.table tr {
+  cursor: pointer;
+}
+/* Must be here due to overriding in column options */
+.bs-checkbox {
+  min-width: 58px !important;
+}
+.remove-checked {
+  vertical-align: 0.9px;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* Pagination for table */
+.pagination > li > a
+ {
+  background-color: white;
+  color: rgb(108, 117, 125);
+}
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover
+ {
+  color: rgb(90, 98, 104);
+  background-color: #eee;
+  border-color: #ddd;
+}
+.pagination > .active > a
+ {
+  color: white;
+  background-color: rgb(108, 117, 125) !important;
+  border: solid 1px rgb(108, 117, 125) !important;
+}
+.pagination > .active > a:hover
+ {
+  background-color: rgb(90, 98, 104) !important;
+  border: solid 1px rgb(90, 98, 104);
+}
+
+/* Map CSS ---------------------------------------------------------------------------------- */
+#map {
+  height: 100%;
+}
+.leaflet-top {
+  z-index: 900;
+}
+.leaflet-control-layers-scrollbar{
+  overflow: hidden;
+  padding-right: 0px;
+}
+.legend {
+  line-height: 18px;
+}
+.legend i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 8px;
+}
+/* Info pop up box when hovering over a point */
+.info {
+  padding: 6px 8px;
+  /* font: 12px Arial, Helvetica, sans-serif; */
+  background: white;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+/* Displayed when hovering over a cluster graph donut slice. */
+.donut-text {
+  color: black;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 2;
+  line-height: 0;
+  width: 100%;
+  text-align: center;
+}
+.info-control {
+	padding: 6px 8px;
+	font: 14px/16px Arial, Helvetica, sans-serif;
+	background: white;
+	background: rgba(255,255,255,0.9);
+	box-shadow: 0 0 15px rgba(0,0,0,0.2);
+	border-radius: 5px;
+}
+.leaflet-control-layers {
+  border: 1px solid transparent !important;
+  overflow: auto;
+}
+.leaflet-control-layers label {
+  font-weight: normal;
+  margin-bottom: 0px;
+}
+.leaflet-control-layers-selector {
+  top: 0px;
+}
+.leaflet-control-zoom-in {
+  border: 2px solid transparent !important;
+}
+.leaflet-bar {
+  border: none !important;
+}
+.marker-cluster {
+  background-clip: content-box !important;
+  border: solid 10px rgba(0, 0, 0, 0)important;
+  padding: 1px !important;
+  border-radius: 100% !important;
+  background-color: rgba(255, 255, 255, 0.65) !important;
+}
+.marker-cluster-pie-label {
+  font-size: 12px !important;
+  font-family: Helvetica !important;
+  font-weight: bold !important;
+}
+/* Bidfood Form Generator (Portal) ----------------------------------------------------------- */
+.bidfood-table {
+  font-size: 7pt;
+}
+.bidfood-table th {
+  padding: 7px;
+}
+.bidfood-table td {
+  padding: 7px;
+}
+.order-form .container {
+  color: #4c4c4c;
+  padding: 20px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
+}
+.order-form-label {
+  margin: 8px 0 0 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+.order-form-input {
+  width: 100%;
+  padding: 8px 8px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1.2em;
+  background-color: transparent;
+  border-color: #cccccc;
+}
+.order-table-input {
+  width: 100%;
+  padding: 8px 8px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 3px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  font-style: normal;
+  line-height: 1.2em;
+  background-color: transparent;
+  border-color: #cccccc;
+}
+.order-table-label {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1.2em;
+  background-color: transparent;
+  border-color: #cccccc;
+}
+.bidfood-remove-borders {
+  border-width: none !important;
+  border-style: none !important;
+  border-radius: none !important;
+}
+.bidfood-modal {
+  left: 50%;
+  width:220% !important;
+  margin: 0 auto;
+  transform: translate(-50%, 0%);
+}
+
+/* Loading Mask ------------------------------------------------------------------------------ */
+.loading-mask {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-around;
+  background-color: rgba(0, 0, 0, 0.5);
+  font-size: 30px;
+  z-index: 20000;
+}
+.loading-indicator {
+  position: absolute;
+  width: 220px;
+  height: 40px;
+  top: 50%;
+  left: 50%;
+  margin: -10px 0 0 -110px;
+  z-index: 20002;
+}
+.loading-bar {
+  width: 100%;
+}
+
+/* Buttons -------------------------------------------------------------------------- */
+.btn-action-group {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.btn-left {
+  float: left;
+}
+.btn-yellow {
+  background-color: #ffff33;
+  /* color: #ffde59; */
+}
+.button {
+  border: 1px solid rgba(0, 0, 0, 0.178);
+  border-radius: 4px;
+  width: 42px;
+  height: 42px;
+  font-size: 1.3em;
+  background-color: #fff;
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),0px 2px 2px 0px rgba(0, 0, 0, 0.14),0px 1px 5px 0px rgba(0,0,0,.12);
+  transition: all ease-in-out 0.2s;
+  cursor: pointer;
+}
+.button-disabled {
+  color:rgb(175, 175, 175) !important;
+  background-color: #6C757D !important;
+  pointer-events: none !important;
+}
+.button:hover {
+  border: 1px solid rgb(0, 0, 0);
+  background-color: #ddd;
+}
+/* When holding down a button that requires 2 seconds to confirm... */
+.progress-bar-hold {
+  -webkit-transition: width 2s ease;
+  transition: width 2s ease;
+  will-change: transform;
+}
+
+/* Editing --------------------------------------------------------------------------------------- */
+.edit-list-group-item{
+  border-color: lightgrey;
+  border-width: 0.1px;
+  text-align: left;
+  width: 96%;
+}
+
+/* Navbar ---------------------------------------------------------------------------------------- */
+.navbar .navbar-brand {
+  font-size: 25px;
+  color: #000000;
+}
+.navbar {
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.navbar-brand {
+  padding: 0px;
+  line-height: 1rem;
+}
+.navbar-brand img {
+  height: 100%;
+  margin-top: -5px;
+  margin-right: 15px;
+  display: inline;
+}
+.navbar-nav {
+  float: right;
+  /* padding-top: 10px; */
+}
+.navbar-nav img {
+  height: 40px;
+  margin-top: -12px;
+  margin-bottom: -10px;
+}
+/* Max height of top right toolbar */
+.toolbar-max-height {
+  max-height: 38px;
+}
+
+/* General use in app ------------------------------------------------------------------------------[ */
+.dropdown-toggle { cursor: pointer;
+}
+.white-background {
+  background-color: white;
+}
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+.padding-5 {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.padding-0 {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+.padding-3-all {
+  padding: 3px 3px 3px 3px !important;
+}
+.padding-0-all {
+  padding: 0px;
+}
+.form-group {
+  margin-bottom: 3px;
+}
+.form-control {
+  display: inline;
+}
+.semi-bold-text {
+  font-weight: 480;
+  margin-bottom: 4px;
+}
+.action {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.fade-in {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: .4s;
+}
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0.2;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+/* Alternatives for JQuery */
+.fade-in {
+  transition: opacity 400ms;
+}
+.fade-out {
+  opacity: 0;
+  transition: opacity 400ms;
+}
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cdem-select {
+  position: absolute;
+  width: 220px;
+  height: 80px;
+  top: 50%;
+  left: 50%;
+  margin: -10px 0 0 -110px;
+  z-index: 20003;
+}
+.rule-value-container {
+  max-height: 100px;
+  width: 350px;
+  overflow: auto;
+}
+
+.tab-content {
+  padding-top: 10px;
+}
+
+.fas {
+  color: black;
+}
+.fa-white {
+  color: white;
+}
+
+/* Deleting ------------------------------------------------------------------------------------------------- */
+.del-checklist-margins {
+  padding-left: 5px !important;
+  margin-bottom: 0px !important;
+}
+
+/* Media ---------------------------------------------------------------------------------------------------- */
+@media (max-width: 992px) {
+  .navbar, .navbar-brand {
+    font-size: 18px;
+  }
+  body {
+    overflow-y: auto;
+  }
+  .fixed-table-toolbar {
+    display: none;
+  }
+  .fixed-table-container {
+    padding-bottom: 15px !important;
+  }
+}
+@media print {
+  .navbar {
+    display: none !important;
+  }
+  .leaflet-control-container {
+    display: none !important;
+  }
+}
+
+/* Filtering ---------------------------------------------------------------------------------------- */
+.filter-on, .filter-on:hover, .filter-on:focus {
+  color: rgb(255, 187, 0);
+}
+/* No Data */
+.no-data {
+  padding-top: 50px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Splash screen -------------------------------------------------------------------------------------
+   Contains the custom css and animations for the login/splash screen
+   that first opens up when accessing the portal instance.*/
+.splash-text {
+  opacity: 0;
+  z-index: 101;
+  text-align: left;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-size: 48px;
+  font-weight: 700;
+  -webkit-animation: on .6s ease-in-out 3.7s forwards;
+  -moz-animation: on .6s ease-in-out 3.7s forwards;
+  -o-animation: on .6s ease-in-out 3.7s forwards;
+  animation: on .6s ease-in-out 3.7s forwards;
+}
+.splash-text p {
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+  -webkit-animation: type .3s steps(60, end) 3.7s;
+  -moz-animation: type .3s steps(60, end) 3.7s;
+  -o-animation: type .3s steps(60, end) 3.7s;
+  animation: type .3s steps(60, end) 3.7s;
+}
+.splash-text p:nth-child(2) {
+  -webkit-animation: type2 .5s steps(60, end) 3.7s;
+  -moz-animation: type2 .5s steps(60, end) 3.7s;
+  -o-animation: type2 .5s steps(60, end) 3.7s;
+  animation: type2 .5s steps(60, end) 3.7s;
+}
+.splash-notes {
+  font-size: 16px;
+  font-weight: 400;
+  width: -webkit-fill-available;
+  border: 1px solid #191919;
+  border-radius: .25rem;
+  margin-top: 30px;
+  padding: 10px;
+}
+.splash-icon {
+  filter: invert(13%) sepia(24%) saturate(221%) hue-rotate(163deg) brightness(96%) contrast(95%);
+  height: 200px;
+  width: 200px;
+  margin-right: 30px;
+}
+.splash {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+}
+.splash-svg {
+  position: relative;
+  margin: auto;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  right: 0;
+}
+.splash-svg svg {
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+}
+.splash-svg svg rect {
+  width: 100%;
+  height: 100%;
+  fill: #f5d300;
+  stroke: 0;
+  -webkit-clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+  clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+  -webkit-animation: expand .7s ease-in forwards 2.7s;
+  -moz-animation: expand .7s ease-in forwards 2.7s;
+  -o-animation: expand .7s ease-in forwards 2.7s;
+  animation: expand .7s ease-in forwards 2.7s;
+}
+.splash-minimize {
+  position: absolute;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 99;
+}
+.splash-minimize svg {
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+}
+.splash-minimize svg rect {
+  width: 100%;
+  height: 100%;
+  -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+  clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+  -webkit-animation: scale .2s ease-out forwards 1s, hide 1.3s ease-out forwards 1.2s;
+  -moz-animation: scale .2s ease-out forwards 1s, hide 1.3s ease-out forwards 1.2s;
+  -o-animation: scale .2s ease-out forwards 1s, hide 1.3s ease-out forwards 1.2s;
+  animation: scale .2s ease-out forwards 1s, hide 1.3s ease-out forwards 1.2s;
+}
+/* Below is for the background effect */
+@-webkit-keyframes scale {
+  100% {
+    -webkit-clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+    clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+  }
+}
+@-moz-keyframes scale {
+  100% {
+    -webkit-clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+    clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+  }
+}
+@-o-keyframes scale {
+  100% {
+    -webkit-clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+    clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+  }
+}
+@keyframes scale {
+  100% {
+    -webkit-clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+    clip-path: polygon(45vw 40vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+  }
+}
+@-webkit-keyframes hide {
+  100% {
+    fill: transparent;
+  }
+}
+@-moz-keyframes hide {
+  100% {
+    fill: transparent;
+  }
+}
+@-o-keyframes hide {
+  100% {
+    fill: transparent;
+  }
+}
+@keyframes hide {
+  100% {
+    fill: transparent;
+  }
+}
+@-webkit-keyframes off {
+  100% {
+    opacity: 0;
+  }
+}
+@-moz-keyframes off {
+  100% {
+    opacity: 0;
+  }
+}
+@-o-keyframes off {
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes off {
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes on {
+  100% {
+    opacity: 1;
+  }
+}
+@-moz-keyframes on {
+  100% {
+    opacity: 1;
+  }
+}
+@-o-keyframes on {
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes on {
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes type {
+  0% {
+    width: 0;
+  }
+}
+@-moz-keyframes type {
+  0% {
+    width: 0;
+  }
+}
+@-o-keyframes type {
+  0% {
+    width: 0;
+  }
+}
+@keyframes type {
+  0% {
+    width: 0;
+  }
+}
+@-webkit-keyframes type2 {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 0;
+  }
+  100% {
+    width: 100;
+  }
+}
+@-moz-keyframes type2 {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 0;
+  }
+  100% {
+    width: 100;
+  }
+}
+@-o-keyframes type2 {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 0;
+  }
+  100% {
+    width: 100;
+  }
+}
+@keyframes type2 {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 0;
+  }
+  100% {
+    width: 100;
+  }
+}
+@-webkit-keyframes expand {
+  25% {
+    -webkit-clip-path: polygon(0vw 0vh, 55vw 40vh, 55vw 58vh, 45vw 58vh);
+    clip-path: polygon(0vw 0vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+    fill: black;
+  }
+  50% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 45vw 60vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 45vw 60vh);
+    fill: #f5d300;
+  }
+  75% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 0vw 100vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 0vw 100vh);
+    fill: white;
+  }
+  100% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+    fill: #f5d300;
+  }
+}
+@-moz-keyframes expand {
+  25% {
+    -webkit-clip-path: polygon(0vw 0vh, 55vw 40vh, 55vw 58vh, 45vw 58vh);
+    clip-path: polygon(0vw 0vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+    fill: black;
+  }
+  50% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 45vw 60vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 45vw 60vh);
+    fill: #f5d300;
+  }
+  75% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 0vw 100vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 0vw 100vh);
+    fill: white;
+  }
+  100% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+    fill: #f5d300;
+  }
+}
+@-o-keyframes expand {
+  25% {
+    -webkit-clip-path: polygon(0vw 0vh, 55vw 40vh, 55vw 58vh, 45vw 58vh);
+    clip-path: polygon(0vw 0vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+    fill: black;
+  }
+  50% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 45vw 60vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 45vw 60vh);
+    fill: #f5d300;
+  }
+  75% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 0vw 100vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 0vw 100vh);
+    fill: white;
+  }
+  100% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+    fill: #f5d300;
+  }
+}
+@keyframes expand {
+  25% {
+    -webkit-clip-path: polygon(0vw 0vh, 55vw 40vh, 55vw 58vh, 45vw 58vh);
+    clip-path: polygon(0vw 0vh, 55vw 40vh, 55vw 60vh, 45vw 60vh);
+    fill: black;
+  }
+  50% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 45vw 60vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 45vw 60vh);
+    fill: #f5d300;
+  }
+  75% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 0vw 100vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 55vw 60vh, 0vw 100vh);
+    fill: f5d300;
+  }
+  100% {
+    -webkit-clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+    clip-path: polygon(0vw 0vh, 100vw 0vh, 100vw 100vh, 0vw 100vh);
+    fill: #f5d300;
+  }
+}
+/* Below is for the button shake */
+.shake-bottom {
+	-webkit-animation: shake-bottom 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+	        animation: shake-bottom 0.8s cubic-bezier(0.455, 0.030, 0.515, 0.955) both;
+}
+ @-webkit-keyframes shake-bottom {
+  0%,
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+    -webkit-transform-origin: 50% 100%;
+            transform-origin: 50% 100%;
+  }
+  10% {
+    -webkit-transform: rotate(2deg);
+            transform: rotate(2deg);
+  }
+  20%,
+  40%,
+  60% {
+    -webkit-transform: rotate(-4deg);
+            transform: rotate(-4deg);
+  }
+  30%,
+  50%,
+  70% {
+    -webkit-transform: rotate(4deg);
+            transform: rotate(4deg);
+  }
+  80% {
+    -webkit-transform: rotate(-2deg);
+            transform: rotate(-2deg);
+  }
+  90% {
+    -webkit-transform: rotate(2deg);
+            transform: rotate(2deg);
+  }
+}
+@keyframes shake-bottom {
+  0%,
+  100% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+    -webkit-transform-origin: 50% 100%;
+            transform-origin: 50% 100%;
+  }
+  10% {
+    -webkit-transform: rotate(2deg);
+            transform: rotate(2deg);
+  }
+  20%,
+  40%,
+  60% {
+    -webkit-transform: rotate(-4deg);
+            transform: rotate(-4deg);
+  }
+  30%,
+  50%,
+  70% {
+    -webkit-transform: rotate(4deg);
+            transform: rotate(4deg);
+  }
+  80% {
+    -webkit-transform: rotate(-2deg);
+            transform: rotate(-2deg);
+  }
+  90% {
+    -webkit-transform: rotate(2deg);
+            transform: rotate(2deg);
+  }
+}
+
+.flash {
+  transition: 0.32s all ease-in-out
+}
+
+.flash-container--fade {
+  right: 0;
+  bottom: 0
+}
+
+.flash-container--fade .flash-wrapper {
+  display: inline-block
+}
+
+.flash.fade-init {
+  opacity: 0
+}
+
+.flash.fade-show {
+  opacity: 1
+}
+
+.flash.fade-hide {
+  opacity: 0
+}
+
+.sign-in-btn{
+  max-width: 700px;
+  -webkit-transition: max-width 2s;
+  transition: max-width 2s;
+  overflow: hidden;
+}
+
+.cdem-select-button-group{
+  width: -webkit-fill-available;
+}
+.row-container {
+  display: inline-flex;
+  flex-direction: row;
+  position: relative;
+}
+.login-issue-collapsable {
+  overflow-y:scroll;
+  height: 250px;
+  border-top: 1px solid #191919 !important;
+}

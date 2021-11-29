@@ -1,0 +1,17 @@
+{
+  "short_name": "Āwhina",
+  "name": "Āwhina Welfare System",
+  "description": "Portal to the Āwhina Welfare System for a specific Emergency",
+  "icons": [
+    {
+      "src": "assets/images/logo/cdlogo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+
+  "background_color": "#005a9c",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#005a9c"
+}

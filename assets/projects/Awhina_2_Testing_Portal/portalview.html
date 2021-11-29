@@ -1,0 +1,758 @@
+<!-- 
+ * Title: portalview.html
+ * Purpose: Defines the html elements for the Āwhina portal instances.
+ * Author: Dion Fabbro - dion.fabbro@nema.govt.nz, dionfabbro@gmail.com
+ * Version: 0.98
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="description" content="Portal to an Āwhina Welfare System for a specific Emergency">
+    <meta name="keywords" content="Āwhina Welfare System">
+    <meta name="author" content="National Emergency Management Agency">
+    <title class="title">Āwhina Welfare System</title>
+    <link rel="manifest" href="../../../manifest.webmanifest">
+    <link rel="icon" href="../../images/logo/cdlogo.png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../../lib/bootstrap-tourist/bootstrap-tourist.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet-geocoder/2.3.3/esri-leaflet-geocoder.css">
+    <link rel="stylesheet" href="../../lib/jQuery-QueryBuilder/query-builder.default.min.css">
+    <link rel="stylesheet" href="https://js.arcgis.com/4.20/esri/themes/light/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" />
+    <link rel="stylesheet" href="../../css/app.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css">
+  </head>
+
+  <body id="body" class="body-index">
+
+    <!-- Welcome splash screen ************************************************************************** -->
+    <div id="splash-container" style="background-color: white; z-index: 97;">
+      <div class="splash" style="z-index: 99;">
+        <div class="splash-svg">
+          <svg width="100%" height="100%">
+            <rect width="100%" height="100%" >
+          </svg>
+        </div>
+        <div class="splash-minimize">
+          <svg width="100%" height="100%">
+            <rect width="100%" height="100%" >
+          </svg>
+        </div>
+      </div>
+      <div class="row splash-text">
+        <div class="column">
+          <img src="../../images/svg/heart-regular.svg" class="splash-icon"/>
+        </div>
+        <div class="column">
+          <p>Āwhina Welfare Portal</p>
+          <p><span id="splash-title">...</span></p>
+        </div>
+        <div class="row">
+          <div id="select-cdem-list-container" class="column" role="group">
+            <button type="button" id="cdem-select-button-group" class="cdem-select-button-group btn btn-dark dropdown-toggle" style="color: #f5d300;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+              <div class="spinner-border spinner-border-sm" role="status"></div> LOADING CONFIGURATION
+            </button>
+            <ul id="select-cdem-list" class="select-cdem-list dropdown-menu"></ul>
+          </div>
+          <div class="column">
+            <button id="sign-in" class="btn btn-dark" style="color: #f5d300; margin-left: 15px" disabled>LOG IN</button>
+          </div>
+          <div class="column" style="margin-left: 15px">
+            <button id="continue-to-app" class="btn btn-dark" style="color: #f5d300;" disabled>CONTINUE TO APP</button>
+          </div>
+        </div>
+        <!-- TODO enable this in js -->
+        <div id="access-denied-alert" class="row splash-notes alert alert-light" style="display: none;">
+          <h3>Access Denied for: <span id=denied-username></span></h3>
+          Sorry, your access has been refused due to insufficient user privileges or the wrong account.<br>
+          If you have signed in with the wrong account, please ensure MS Teams is signed into the correct account and try again.<br>
+          If you believe this to be in error, please contact the NEMA Āwhina Welfare Team.<br><br>
+          <b>Dion Fabbro</b><br>
+          Dion.Fabbro@nema.govt.nz<br>
+          027 270 4798
+        </div>
+        <div class="row splash-notes" style="margin-bottom: 20px;">
+          <p>
+            Welcome to the Āwhina Welfare Portal. This system allows you to manage welfare referrals collected in the related Survey123 app.<br>
+            After signing in and selecting the CDEM Group you belong to, an interactive tour will help you familiarise yourself with the system.<br>
+            Further help can be found under the <i class="far fa-question-circle"></i> icon found in the top toolbar in the app.<br>
+            You can also select a different CDEM if you have permission under the same icon.
+          </p>
+          <div class="row-container">
+            <div id="login-issue-p">
+              <h6 class="btn btn-dark" style="color: #f5d300;" data-toggle="collapse" data-target="#login-issue-collapsable">
+                Trouble logging in?
+              </h6>
+              <ul id="login-issue-collapsable" class="collapse login-issue-collapsable">
+                <li>
+                  No popup window appearing to sign into?<br>
+                  Ensure that your browser is allowing popups:<br>
+                  <img src="../../images/instructions/allow-popups-instructions.png"/><br>
+                </li>
+                <li>
+                  You may be selecting the wrong login method. Make sure to click the button shown:<br>
+                  <img src="../../images/instructions/select-login-method.png"/><br>
+                </li>
+                <li>
+                  <b>Logging in but not able to view anything?</b><br>You may be logged into an incorrect account.<br>
+                  This can be due to using a welfare specific computer login or a user account that<br>does not have access to the system.<br>
+                  Logout of your microsoft account by clicking the below button, then try logging in again.<br>
+                  <button id="sign-out-ms-acc" class="btn btn-dark" style="color: #f5d300; margin-top: 10px;">Sign out of MS Account</button><br>
+                </li>
+                <li>
+                  <b>Still having issues?</b><br>Please contact your CDEM Group's Āwhina Administrator for help.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="splash-background" style="background-color: #191919; width: 100%; height: 100%; z-index: 98;"></div>
+
+    <!-- Loading mask for initilisation of app -->
+    <div id="loading-mask" class="loading-mask modal-backdrop" style="display: none;">
+    </div>
+
+    <!-- Seperate loading mask for ajax loads (so as not to interact with the first on page loads) -->
+    <div id="loading-ajax" class="loading-indicator progress" style="display: none;">
+      <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" style="width:100%" id="loading-bar-ajax">Loading - this may take some time.</div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="navbar navbar-light navbar-fixed-top navbar-expand-lg" id = "navbar" role="navigation">
+      <div class="container-fluid padding-0-all">
+        <div class="navbar-header">
+          <h4 class="navbar-title"></h4>
+        </div>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <ul class="nav navbar-nav">
+          <div class=" btn-group collapse navbar-collapse"  role="group">
+            <li class="nav-item btn btn-secondary toolbar-max-height" id="about-btn" href="#" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="far fa-question-circle"></i></li>
+            <li class="nav-item btn btn-secondary toolbar-max-height" id="extent-btn" href="#" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fas fa-expand-arrows-alt"></i> Extent</li>
+            <li class="nav-item btn btn-secondary toolbar-max-height" id="survey123-btn" href="#" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fas fa-poll-h"></i> S123</li>
+            <li class="nav-item btn btn-secondary toolbar-max-height" id="dashboard-btn" href="#" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li class="hidden-md hidden-lg btn btn-secondary filter-btn toolbar-max-height" id="filter-btn" style="display: none;" href="#" data-toggle="collapse" data-target=".navbar-collapse.in"><i class="fas fa-filter"></i> Filter Data</li>
+            <div class="btn-group" role="group">
+              <button id="nav-button-group" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-desktop"></i><span id="view"> Split View </span><b class="caret"></b>
+              </button>
+              <ul class="dropdown-menu">
+                <li class="dropdown-item btn btn-secondary" href="#" data-toggle="collapse" data-target=".navbar-collapse.in" name="view" id="map-table"><i class="fas fa-grip-horizontal"></i> Split View</li>
+                <li class="dropdown-item btn btn-secondary" href="#" data-toggle="collapse" data-target=".navbar-collapse.in" name="view" id="map-only"><i class="fas fa-globe"></i> Map View</li>
+                <li class="dropdown-item btn btn-secondary" href="#" data-toggle="collapse" data-target=".navbar-collapse.in" name="view" id="table-only"><i class="fas fa-table"></i> Table View</li>
+              </ul>
+            </div>
+            <div class="btn-group" role="group">
+            <button id="sign-button-group" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fas fa-user-circle"></i><span id="login"> </span><b class="caret"></b>
+            </button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-item btn btn-light" href="#" data-toggle="collapse" data-target=".navbar-collapse.in" name="login" id="sign-out">Sign Out</li>
+            </ul>
+            </div>
+          </div>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Holds the map -->
+    <div id="map-container">
+      <div id="map"></div>
+    </div>
+
+    <!-- Holds the table -->
+    <div id="table-container">
+      <!-- Toolbar contains custom functions as well as standard bootstrap table functions. -->
+      <div id="toolbar">
+        <div class="btn-group" role="group">
+          <button type="button" class="btn btn-secondary filter-btn" id="filter-btn-1" data-toggle="modal" data-target="#filter-modal" data-backdrop="static" data-keyboard="false"><i class="fas fa-filter"></i> Filter Data</button>
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="quick-filters"><i class="fas fa-bolt"></i> Quick Filter <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-item btn btn-secondary" href="#" id="reset-rows" name="quick-filter-buttons"> Reset Filtering</li>
+              <li class="dropdown-item btn overdue" href="#" id="overdue-rows" name="quick-filter-buttons"> Overdue</li>
+              <li class="dropdown-item btn due-tomorrow" href="#" id="due-tomorrow-rows" name="quick-filter-buttons"> Due Tomorrow</li>
+              <li class="dropdown-item btn btn-danger text-danger" href="#" id="urgent-rows" name="quick-filter-buttons"> Urgent Priority</li>
+              <li class="dropdown-item btn btn-success text-success" href="#" id="unactioned-rows" name="quick-filter-buttons"> Unactioned</li>
+            </ul>
+          </div>
+          <div class="btn-group">
+            <button type="button" id="table-views" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="table-view"><i class="fas fa-exchange-alt"></i> Change View </span><span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li class="dropdown-item btn overview" href="#" id="overview-btn-table" name="table-view"><i class="far fa-caret-square-down"></i> Overview Info</li>
+              <li class="dropdown-item btn requestor-details" href="#" id="requestor-btn-table" name="table-view"><i class="far fa-user"></i> Requestor Details</li>
+              <li class="dropdown-item btn missing-person" href="#" id="missingperson-btn-table" name="table-view"><i class="far fa-address-card"></i> Missing Person</li>
+              <li class="dropdown-item btn household-goods" href="#" id="householdgoods-btn-table" name="table-view"><i class="fas fa-utensils"></i> Household Goods</li>
+              <li class="dropdown-item btn accommodation-shelter" href="#" id="shelteraccommodation-btn-table" name="table-view"><i class="fas fa-house-user"></i> Accommodation/Shelter</li>
+              <li class="dropdown-item btn animal-welfare" href="#" id="animalwelfare-btn-table" name="table-view"><i class="fas fa-paw"></i> Animal Welfare</li>
+              <li class="dropdown-item btn health-disability" href="#" id="healthdisability-btn-table" name="table-view"><i class="fas fa-notes-medical"></i> Health or Disability</li>
+              <li class="dropdown-item btn financial-assistance" href="#" id="financialassistance-btn-table" name="table-view"><i class="fas fa-money-check-alt"></i> Financial Assistance</li>
+              <li class="dropdown-item btn psychosocial-support" href="#" id="psychosocialsupport-btn-table" name="table-view"><i class="fas fa-heart"></i> Psychosocial Support</li>
+              <li class="dropdown-item btn notes" href="#" id="notes-btn-table" name="table-view"><i class="far fa-sticky-note"></i> Notes</li>
+              <li class="dropdown-item btn system-info" href="#" id="system-btn-table" name="table-view"><i class="fas fa-info-circle"></i> System Info</li>
+              <li class="dropdown-item btn full-table" href="#" id="all-btn-table" name="table-view"><i class="fas fa-expand"></i> Full Table</li>
+            </ul>
+          </div>
+        </div>
+        <div id="batch-update-group" class="btn-group batch-update-group" role="group" style="display: none;">
+          <button type="button" class="btn btn-warning edit-checked" aria-haspopup="true" aria-expanded="false"><i class="far fa-edit"></i> Batch Edit</button>
+          <button type="button" class="btn btn-warning" id="bidfood-checked" style="display: none;" aria-haspopup="true" aria-expanded="false"><i class="fab fa-wpforms"></i> Batch Bidfood Order</button>
+          <button type="button" class="btn btn-danger delete-checked" aria-haspopup="true" aria-expanded="false"><i class="fas fa-trash"></i> Batch Delete</button>
+        </div>
+        <span id="feature-count" class="text-muted" style="padding-left: 10px;"></span>
+        
+      </div>
+      <!-- The bootstrap table itself -->
+      <table id="main-table"></table>
+    </div>
+
+    <!-- About -->
+    <div class="modal fade" id="about-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">About the Āwhina Welfare System Portal</h4>
+            <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p>Data portal for the Āwhina Welfare System.<br>This dashboard is tied to one emergency and data is only viewable to approved users.<br>Depending on permission, a user may not be able to see all referral needs (i.e. only having access to household goods referrals when shelter and accommodation referrals exist).<br>For help with the system, please contact your GIS Administrator.</p>
+            <div class="panel panel-primary">
+              <div class="panel-heading">Supporting information:<br></div>
+              <ul class="list-group">
+                <li class="list-group-item">TESTING ONLY. NOT TO BE USED FOR EVENTS.</li>
+                <div>
+                  <button type="button" class="list-group-item cdem-select-button-group btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    CHANGE CDEM GROUP
+                  </button>
+                  <ul class="select-cdem-list dropdown-menu" id="change-cdem-group"></ul>
+                </div>
+                <li class="list-group-item btn btn-light" id="restart-tour">Restart the app feature tour.</li>
+                <li class="list-group-item" id="about-fullLayer"><a href="" target="_blank" rel='noreferrer'>Primary Feature Layer</a></li>
+                <li class="list-group-item overview" id="about-overview"><a href="" target="_blank" rel='noreferrer'>Registration Feature View</a></li>
+                <li class="list-group-item missing-person" id="about-missingperson"><a href="" target="_blank" rel='noreferrer'>Missing Person Feature View</a></li>
+                <li class="list-group-item household-goods" id="about-householdgoods"><a href="" target="_blank" rel='noreferrer'>Household Goods Feature View</a></li>
+                <li class="list-group-item accommodation-shelter" id="about-shelteraccommodation"><a href="" target="_blank" rel='noreferrer'>Shelter & Accommodation Feature View</a></li>
+                <li class="list-group-item animal-welfare" id="about-animalwelfare"><a href="" target="_blank" rel='noreferrer'>Animal Welfare Feature View</a></li>
+                <li class="list-group-item health-disability" id="about-healthdisability"><a href="" target="_blank" rel='noreferrer'>Health & Disability Feature View</a></li>
+                <li class="list-group-item financial-assistance" id="about-financialassistance"><a href="" target="_blank" rel='noreferrer'>Financial Assistance Feature View</a></li>
+                <li class="list-group-item psychosocial-support" id="about-psychosocialsupport"><a href="" target="_blank" rel='noreferrer'>Psychosocial Support Feature View</a></li>
+                <li class="list-group-item"><a href="https://teams.microsoft.com/l/file/2F041E1C-39ED-445A-A199-E1A4887C7348?tenantId=bf23a304-a236-4f18-9af2-7e2d6f103a4b&fileType=pdf&objectUrl=https%3A%2F%2Femergencymanagementnz.sharepoint.com%2Fsites%2FAwhinaCOVID-19%2FShared%20Documents%2FGeneral%2FAwhina%20COVID-19%20Portal%20and%20Dashboard%20User%20Guide.pdf&baseUrl=https%3A%2F%2Femergencymanagementnz.sharepoint.com%2Fsites%2FAwhinaCOVID-19&serviceName=teams&threadId=19:8635346437c64302b2999753569f8114@thread.tacv2&groupId=c8ee029c-4821-4a76-9aec-852dfa82ac98" target="_blank" rel='noreferrer'>Portal User Guide</a>.</li>
+                <li class="list-group-item" id=awhina-version>Āwhina Version: <span></span>, developed by the National Emergency Management Agency</li>
+              </ul>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtering -->
+    <div class="modal fade" id="filter-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Filter Data<span id="record-count" class="badge pull-right" style="margin-right: 15px; margin-top: 2px;"></span></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div id="query-builder"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary pull-left" id="view-sql-btn"><i class="fas fa-database"></i> SQL</button>
+            <button type="button" class="btn btn-info" id="reset-filter-btn"><i class="fas fa-undo"></i> Reset Filter</button>
+            <button type="button" class="btn btn-primary" id="apply-filter-btn"><i class="fas fa-filter"></i> Apply Filter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature attribute popup box-->
+    <div class="modal fade" id="feature-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Feature Info</h4>
+            <button type="button" id="close-feature-btn-modal" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="esri-widget update" style="display: none;" id="update">
+            <div class="scroller esri-component" id="form"></div>
+          </div>
+          <div class="modal-body" id="feature-info">
+            <ul class="nav nav-pills nav-justified" id="feature-tabs">
+              <li class="nav-item overview" id="overview-info"><a href="#overview-tab" class="nav-link feature-link" data-toggle="tab"><i class="far fa-caret-square-down"></i></a></li>
+              <li class="nav-item requestor-details" id="requestor-details"><a href="#requestor-tab" class="nav-link feature-link" data-toggle="tab"><i class="far fa-user"></i></a></li>
+              <li class="nav-item missing-person" id="missing-person-details"><a href="#missing-person-tab" class="nav-link feature-link" data-toggle="tab"><i class="far fa-address-card"></i></a></li>
+              <li class="nav-item household-goods" id="household-details"><a href="#household-tab" class="nav-link feature-link" data-toggle="tab"><i class="fas fa-utensils"></i></a></li>
+              <li class="nav-item accommodation-shelter" id="accommodation-details"><a href="#accommodation-tab" class="nav-link feature-link" data-toggle="tab"><i class="fas fa-house-user"></i></a></li>
+              <li class="nav-item animal-welfare" id="animal-welfare-details"><a href="#animal-welfare-tab" class="nav-link feature-link" data-toggle="tab"><i class="fas fa-paw"></i></a></li>
+              <li class="nav-item health-disability" id="health-disability-details"><a href="#health-disability-tab" class="nav-link feature-link" data-toggle="tab"><i class="fas fa-notes-medical"></i></a></li>
+              <li class="nav-item financial-assistance" id="financial-assistance-details"><a href="#financial-assistance-tab" class="nav-link feature-link" data-toggle="tab"><i class="fas fa-money-check-alt"></i></a></li>
+              <li class="nav-item psychosocial-support" id="psychosocial-support-details"><a href="#psychosocial-support-tab" class="nav-link feature-link" data-toggle="tab"><i class="fas fa-heart"></i></a></li>
+              <li class="nav-item notes" id="notes-details"><a href="#notes-tab" class="nav-link feature-link" data-toggle="tab"><i class="far fa-sticky-note"></i></a></li>
+              <li class="nav-item system-info" id="system-details"><a href="#system-tab" class="nav-link feature-link" data-toggle="tab"><i class="fas fa-info"></i></a></li>
+            </ul>
+            <div class="tab-content padding-5">
+              <div role="tabpanel" class="tab-pane overview show active" id="overview-tab"></div>
+              <div role="tabpanel" class="tab-pane requestor-details" id="requestor-tab"></div>
+              <div role="tabpanel" class="tab-pane missing-person" id="missing-person-tab"></div>
+              <div role="tabpanel" class="tab-pane household-goods" id="household-tab"></div>
+              <div role="tabpanel" class="tab-pane accommodation-shelter" id="accommodation-tab"></div>
+              <div role="tabpanel" class="tab-pane animal-welfare" id="animal-welfare-tab"></div>
+              <div role="tabpanel" class="tab-pane health-disability" id="health-disability-tab"></div>
+              <div role="tabpanel" class="tab-pane financial-assistance" id="financial-assistance-tab"></div>
+              <div role="tabpanel" class="tab-pane psychosocial-support" id="psychosocial-support"></div>
+              <div role="tabpanel" class="tab-pane notes" id="notes-tab"></div>
+              <div role="tabpanel" class="tab-pane system-info" id="system-tab"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="mr-auto edit-container">
+              <button type="button" class="edit btn btn-warning" id="edit-button" ><i class="far fa-edit"></i> Edit</button>
+              <div class="btn-group mr-auto edit-group" id="edit-group" style=" display: none;" role="group">
+                <button type="button" class="btn btn-danger discard" id="btn-discard" data-dismiss="modal"><i class="far fa-trash-alt"></i> Discard</button>
+                <button type="button" class="btn btn-success save" id="btn-save" data-dismiss="modal"><i class="fas fa-check"></i> Save</button>
+              </div>
+            </div>
+            <button type="button" id="close-feature-btn" class="btn btn-primary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Batch editing modal container -->
+    <div class="modal fade" id="batch-edit-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Update Checked Records</h4>
+            <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body" id="batch-edit-body">
+            <div class="tab-content padding-0" id="batch-edit-tabs-content">
+              <div class="tab-pane fade show active">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" id="batch-edit-warning">
+                  <span id="batch-edit-warning-text" style="inline-size: 1.1;"></span>
+                </div>
+                <div class="panel panel-primary" id="batch-edit-tab">
+                  <form  id="batch-edit-form" style="padding: 10px;" class="batch-edit-form">
+                    <div class="form-group">
+                      <label class="semi-bold-text" for="cdem-groups">CDEM Group:</label>
+                      <select class="form-control" id="cdem-groups" name="cdem-groups">
+                      </select>
+                      <small id="cdem-help-block" class="alert alert-warning form-text" style="padding: 3px; margin: 3px 0px 0px 0px;">
+                        Warning: You may not have permission to see these records after the CDEM Group has been changed.
+                      </small>
+                    </div>
+                    <div class="form-group">
+                      <label class="semi-bold-text" for="cdem-district">District:</label>
+                      <select class="form-control" id="cdem-district" name="cdem-district">
+                      </select>
+                    </div>
+                    <div class="form-row missing-person">
+                      <div class="col">
+                        <label class="semi-bold-text" for="missing-person-priority">Missing Person Priority:</label>
+                        <select class="form-control" id="missing-person-priority" name="missing-person-priority">
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label class="semi-bold-text" for="missing-person-status">Missing Person Status:</label>
+                        <select class="form-control" id="missing-person-status" name="missing-person-status">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row household-goods">
+                      <div class="col">
+                        <label class="semi-bold-text" for="household-goods-priority">Household Goods and Services Priority:</label>
+                        <select class="form-control" id="household-goods-priority" name="household-goods-priority">
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label class="semi-bold-text" for="household-goods-status">Household Goods and Services Status:</label>
+                        <select class="form-control" id="household-goods-status" name="household-goods-status">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row accommodation-shelter">
+                      <div class="col">
+                        <label class="semi-bold-text" for="accommodation-shelter-priority">Shelter and Accommodation Priority:</label>
+                        <select class="form-control" id="accommodation-shelter-priority" name="accommodation-shelter-priority">
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label class="semi-bold-text" for="accommodation-shelter-status">Shelter and Accommodation Status:</label>
+                        <select class="form-control" id="accommodation-shelter-status" name="accommodation-shelter-status">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row animal-welfare">
+                      <div class="col">
+                        <label class="semi-bold-text" for="animal-welfare-priority">Animal Welfare Priority:</label>
+                        <select class="form-control" id="animal-welfare-priority" name="animal-welfare-priority">
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label class="semi-bold-text" for="animal-welfare-status">Animal Welfare Status:</label>
+                        <select class="form-control" id="animal-welfare-status" name="animal-welfare-status">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row health-disability">
+                      <div class="col">
+                        <label class="semi-bold-text" for="health-disability-priority">Health or Disability Priority:</label>
+                        <select class="form-control" id="health-disability-priority" name="health-disability-priority">
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label class="semi-bold-text" for="health-disability-status">Health or Disability Status:</label>
+                        <select class="form-control" id="health-disability-status" name="health-disability-status">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row financial-assistance">
+                      <div class="col">
+                        <label class="semi-bold-text" for="financial-assistance-priority">Financial Assistance Priority:</label>
+                        <select class="form-control" id="financial-assistance-priority" name="financial-assistance-priority">
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label class="semi-bold-text" for="financial-assistance-status">Financial Assistance Status:</label>
+                        <select class="form-control" id="financial-assistance-status" name="financial-assistance-status">
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-row psychosocial-support">
+                      <div class="col">
+                        <label class="semi-bold-text" for="psychosocial-support-priority">Psychosocial Support Priority:</label>
+                        <select class="form-control" id="psychosocial-support-priority" name="psychosocial-support-priority">
+                        </select>
+                      </div>
+                      <div class="col">
+                        <label class="semi-bold-text" for="psychosocial-support-status">Psychosocial Support Status:</label>
+                        <select class="form-control" id="psychosocial-support-status" name="psychosocial-support-status">
+                        </select>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-info padding-3-all" role="alert" id="batch-edit-info" style="text-align: center; margin-bottom: 0px;">
+            <p id="batch-edit-info-text" class="small" style="line-height: 1.15; margin: 3px;">Welfare icons and point symbols will take up to 15 seconds to update.<br>Empty fields will not update.</p>
+          </div>
+          <div class="modal-footer" id="batch-edit-footer">
+            <button type="button" class="btn btn-warning batch-discard mr-auto"><i class="fas fa-times"></i> Cancel</button>
+            <div>
+              <div class="progress" style="position: absolute; z-index: 2;width: 136.66px; height: 38px; pointer-events: none; background-color: rgba(255, 255, 255, 0);">
+                <div class="progress-bar progress-bar-hold" style="width:0%; background-color: #0d3d1842;" width="0%"></div>
+              </div>
+              <button type="batch-submit" id="batch-submit" class="btn btn-success batch-save"><i class="fas fa-check"></i> Hold to Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Appears when deleting rows -->
+    <div class="modal fade" id="delete-row-alert" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Delete Record(s)</h4>
+            <button class="close delete-row-close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p id="main-delete-alert-text"></p>
+            <p id="batch-delete-warning" class="mb-0 alert alert-danger"><b>This cannot be undone.</b></p>
+          </div>
+          <div class="modal-footer" id="delete-bottom-area">
+            <button type="button" class="btn btn-warning delete-row-discard mr-auto" ><i class="fas fa-times"></i> Cancel</button>
+            <div>
+              <div class="progress" style="position: absolute; z-index: 2;width: 136.66px; height: 38px; pointer-events: none; background-color: rgba(255, 255, 255, 0);">
+                <div class="progress-bar progress-bar-hold" style="width:0%; background-color: #3d0d0d42;" width="0%"></div>
+              </div>
+              <button type="button" class="btn btn-danger delete-row-delete"><i class="far fa-trash-alt"></i> Hold to Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bidfood order form popup -->
+    <div class="modal fade" id="bidfood-modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+      <div class="modal-dialog">
+        <div class="modal-content bidfood-modal">
+          <div class="modal-header">
+            <h4 class="modal-title">Create Bidfood Order</h4>
+            <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body" id="bidfood-body">
+            <div class="tab-content padding-0" id="bidfood-batch-edit-tabs-content">
+              <div class="tab-pane fade show active">
+                <div class="panel panel-primary" id="bidfood-tab">
+                  <form id="bidfood-form" class="order-form my-4 mx-4" style="margin: 0px !important;">
+                    <div class="container pt-4" style="padding-top: 5px !important;">
+                      <div class="row">
+                        <div class="col-12">
+                          <h4><span style="color: tomato;">SUBMIT TO:</span> residentshop@bidfood.co.nz</h4>
+                          <span>Generated on <span id="date-input"></span></span>
+                          <hr class="mt-1">
+                        </div>
+                        </form>
+                        <div class="col-12">
+                          <div class="row mx-4">
+                            <div class="col-12 mb-2">
+                              <label class="order-form-label">Name</label>
+                              <input class="order-form-input" id="name"></input>
+                            </div>
+                          </div>
+                          <div class="row mx-4">
+                            <div class="col-12">
+                              <label class="order-form-label">Address</label>
+                            </div>
+                            <div class="col-12">
+                              <input class="order-form-input" id="street-address-l1" placeholder="Street Address"></input>
+                            </div>
+                            <div class="col-12 mt-2">
+                              <input class="order-form-input" id="street-address-l2" placeholder="Street Address Line 2"></input>
+                            </div>
+                            <div class="col-12 col-md-6 mt-2">
+                              <input class="order-form-input" id="city" placeholder="City"></input>
+                            </div>
+                            <div class="col-12 col-md-4 mt-2 selection-div">
+                              <select class="order-form-input" id="region">
+                                <option>Select Region</option>
+                                <option>Northland</option>
+                                <option>Auckland</option>
+                                <option>Waikato</option>
+                                <option>Bay of Plenty</option>
+                                <option>Gisborne</option>
+                                <option>Hawke's Bay</option>
+                                <option>Taranaki</option>
+                                <option>Manawatū-Whanganui</option>
+                                <option>Wellington</option>
+                                <option>Tasman</option>
+                                <option>Nelson</option>
+                                <option>Marlborough</option>
+                                <option>West Coast</option>
+                                <option>Canterbury</option>
+                                <option>Otago</option>
+                                <option>Southland</option>
+                              </select>
+                            </div>
+                            <div class="col-12 col-md-2 mt-2">
+                              <input class="order-form-input" id="postcode" placeholder="Postcode"></input>
+                            </div>
+                          </div>
+                          <div class="row mx-4">
+                            <div class="form-group col-md-6">
+                              <label class="order-form-label">Regional Account Number</label>
+                              <input class="order-form-input" id="regional-acc-num" placeholder="Number"></input>
+                            </div>
+                            <div class="form-group col-md-6 selection-div">
+                              <label class="order-form-label">Delivery ETA (2 days / 3+ days)</label>
+                              <select class="order-form-input" id="delivery-eta">
+                                <option>Select ETA</option>
+                                <option>2 Days</option>
+                                <option>3 Days</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="row mx-4">
+                            <div class="form-group col-md-6">
+                              <label class="order-form-label">CD Contact Person</label>
+                              <input class="order-form-input" id="cd-contact-person" placeholder="Contact Person">
+                            </div>
+                            <div class="form-group col-md-6">
+                              <label class="order-form-label">CD Contact Number</label>
+                              <input class="order-form-input" id="cd-contact-number" placeholder="Contact Number">
+                            </div>
+                          </div>
+                          <div class="row mx-5 mt-2">
+                            <table class="bidfood-table">
+                              <thead>
+                                <tr>
+                                  <th class="order-form-label">Product Description</th>
+                                  <th class="order-form-label">Pack Size</th>
+                                  <th class="order-form-label">Order Unit</th>
+                                  <th class="order-form-label">QTY Required</th>
+                                  <th class="order-form-label">Price</th>
+                                  <th class="order-form-label" style="width: 350px;">Notes</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr>
+                                  <td class="order-table-label">GENERAL DIET FOOD BOX</td>
+                                  <td class="order-table-label">4 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="general-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$259.55</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="general-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">VEGETARIAN FOOD BOX</td>
+                                  <td class="order-table-label">4 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="vegetarian-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$213.22</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="vegetarian-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">VEGAN FOOD BOX</td>
+                                  <td class="order-table-label">4 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="vegan-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$242.05</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="vegan-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">DAIRY FREE FOOD BOX</td>
+                                  <td class="order-table-label">4 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="dairy-free-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$266.84</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="dairy-free-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">GLUTEN FREE FOOD BOX</td>
+                                  <td class="order-table-label">4 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="gluten-free-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$259.81</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="gluten-free-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">CAT FOOD BOX</td>
+                                  <td class="order-table-label">1 CAT/WEEK </td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="cat-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$16.52</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="cat-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">DOG FOOD BOX</td>
+                                  <td class="order-table-label">1 DOG/WEEK </td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="dog-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$13.41</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="dog-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">BATHROOM ESSENTIALS BOX</td>
+                                  <td class="order-table-label">4 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="bathroom-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$30.62</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="bathroom-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">HOUSEHOLD CLEANING BOX</td>
+                                  <td class="order-table-label">4 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="household-free-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$20.02</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="household-free-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <td class="order-table-label">MASCULINE HYGIENE BOX</td>
+                                  <td class="order-table-label">1 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="masculine-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$10.19</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="masculine-notes"></textarea></td>
+                                </tr>
+                                <tr>
+                                  <!-- Use page break if adding more in for going onto next page cleanly. -->
+                                <!-- <tr class="page-break"> -->
+                                  <td class="order-table-label">FEMININE HYGIENE BOX</td>
+                                  <td class="order-table-label">1 PERS/WEEK</td>
+                                  <td class="order-table-label">EA</td>
+                                  <td><input class="order-table-input col-md-5" id="feminine-qty" style="width: 100px !important;" placeholder="0"></td>
+                                  <td class="order-table-label">$16.54</td>
+                                  <td><textarea maxlength="30" class="order-table-input col-md-12" id="feminine-notes"></textarea></td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                  <div id="order-form-end" class="col-12">
+                    <div class="row mt-4 mx-4 d-flex justify-content-between">
+                      <div>
+                        <input type="checkbox" class="form-check-input" name="validation" id="bidfood-validation" value="1">
+                        <label for="validation" class="form-check-label">I have verified the above information is correct.</label>
+                      </div>
+                      <div style="padding-bottom: 8px;">
+                        <button type="button" id="bidfood-submit" class="btn btn-success d-block mx-auto btn-submit" disabled>Create Order</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Let the user know that they need to use JS. -->
+    <noscript>
+      <p>Sorry, but this website depends on JavaScript. 
+      Please ensure you are using a browser which supports
+      JavaScript and has it enabled.</p>
+   </noscript>
+    <!-- Displays if browser cannot use webworkers -->
+    <div class="alert alert-info alert-dismissible fade show centered" id="web-worker-alert" role="alert" style = "display: none; z-index: 1300;">
+      <button type="button" class="close" aria-label="Close">        
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <h4 class="alert-heading">Warning</h4>
+      <p>Your internet borwser does not support web workers.</p><hr><p class="mb-0">You will not be able to see your edits or<br>new/updated referrals without manually refreshing the page.</p>
+    </div>
+
+    <script src="../../lib/cdn-failover/jsPDF/jspdf.umd.min.js"></script>
+    <script src="../../lib/cdn-failover/jsPDF/jspdf.plugin.autotable.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.2.2/purify.min.js" integrity="sha512-T6jx0SL5artICbQxeQCg3iToWGEuWM6P2XjNxP1vMI6fNtgIb3dnVD5gpd/pkQKoMfi1ygq5ezv/Z2VB3lLGtw==" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script src="../../lib/bootstrap-tourist/bootstrap-tourist.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/tableexport.jquery.plugin/tableExport.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.17.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet/2.4.1/esri-leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/esri-leaflet-geocoder/2.3.3/esri-leaflet-geocoder.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/alasql/0.1/alasql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-QueryBuilder/2.6.0/js/query-builder.standalone.min.js" integrity="sha512-tbr31bGkLLmqNLJLnVKqP16THWj1/98AlFV2qjMu48pJjvvjsVPXQ3okTYLJCYufnj1A2slz0Ko2q+ToZ5UcAg==" crossorigin="anonymous"></script>
+    <!-- <script src="../../lib/jQuery-QueryBuilder/query-builder.standalone.min.js"></script> -->
+    <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js" integrity="sha384-3Nqiqht3ZZEO8FKj7GR1upiI385J92VwWNLj+FqHxtLYxd9l+WYpeqSOrLh0T12c" crossorigin="anonymous"></script>
+    <script src="../../lib/tableExport/libs/FileSaver/FileSaver.min.js"></script>
+    <!-- <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF/jspdf.min.js"></script>
+    <script src="https://unpkg.com/tableexport.jquery.plugin/libs/jsPDF-AutoTable/jspdf.plugin.autotable.js"></script> -->
+    <script src="../../lib/html2pdf/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js" integrity="sha512-LGXaggshOkD/at6PFNcp2V2unf9LzFq6LE+sChH7ceMTDP0g2kn6Vxwgg7wkPP7AAtX+lmPqPdxB47A0Nz0cMQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous"></script>
+    <script src="https://js.arcgis.com/4.20/"></script>
+    <script src="portal.js"></script>
+  </body>
+</html>

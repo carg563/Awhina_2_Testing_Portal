@@ -1,0 +1,40 @@
+{
+  "emergencyName": "Test Site for 2.0",
+  "title": " Āwhina Welfare System - ",
+  "welfareNeeds": [
+      "Household Goods and Services",
+      "Shelter and Accommodation"
+  ],
+  "awhinaDeploymentURL": "http://localhost:8000/Documents/GIS/Awhina2/Awhina_DEV/assets/projects/Portal%20Testing%202.0/awhina_portal",
+  "portalURL": "https://awhina.emergencymanagement.govt.nz/portal",
+  "survey123URL": "https://survey123.arcgis.com/share/undefined?portalUrl=https://awhina.emergencymanagement.govt.nz/portal",
+  "cdemGroups": {
+    "Auckland CDEM": {
+      "layerURLs": {
+        "all": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/Awhina_2_Beta_Data/FeatureServer/0",
+        "householdgoods": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_AUK_Household_Goods_and_Services/FeatureServer/0",
+        "overview": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_AUK_Registration/FeatureServer/0",
+        "requestor": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_AUK_Registration/FeatureServer/0",
+        "notes": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_AUK_Registration/FeatureServer/0",
+        "system": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_AUK_Registration/FeatureServer/0",
+        "shelteraccommodation": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_AUK_Shelter_and_Accommodation/FeatureServer/0"
+      },
+      "dashboardURL": "https://awhina.emergencymanagement.govt.nz/portal/apps/opsdashboard/index.html#/d319e1ff57cf4dd5b7b8d2708cbdb663",
+      "cdemGroup": "Auckland CDEM"
+    },
+    "Chatham Islands CDEM": {
+        "layerURLs": {
+          "all": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/Awhina_2_Beta_Data/FeatureServer/0",
+          "householdgoods": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_CIT_Household_Goods_and_Services/FeatureServer/0",
+          "overview": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_CIT_Registration/FeatureServer/0",
+          "requestor": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_CIT_Registration/FeatureServer/0",
+          "notes": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_CIT_Registration/FeatureServer/0",
+          "system": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_CIT_Registration/FeatureServer/0",
+          "shelteraccommodation": "https://awhina.emergencymanagement.govt.nz/server/rest/services/Hosted/2_0_Beta_CIT_Shelter_and_Accommodation/FeatureServer/0"
+        },
+        "dashboardURL": "https://awhina.emergencymanagement.govt.nz/portal/apps/opsdashboard/index.html#/f730bf0eb38a40979fbcd9b985745102",
+        "cdemGroup": "Chatham Islands CDEM"
+    }
+  }
+  
+}
